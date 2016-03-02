@@ -19,12 +19,10 @@ function extractSpdxLicenseIds(response) {
 }
 
 module.exports = function getSpdxLicenseIds(options) {
-  options = options || {};
-
-  if (options.json === false) {
+  if (options && options.json === false) {
     return Promise.reject(new Error(
       'Cannot disable `json` option ' +
-      'because it get-spdx-license-ids always gets the SPDX license IDs as JSON.'
+      'because get-spdx-license-ids always gets the SPDX license IDs as JSON.'
     ));
   }
 

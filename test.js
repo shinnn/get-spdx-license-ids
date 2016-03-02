@@ -29,7 +29,7 @@ test('getSpdxLicenseIds()', t => {
   getSpdxLicenseIds({json: false}).then(t.fail, err => {
     t.strictEqual(
       err.message,
-      'Cannot disable `json` option because it get-spdx-license-ids always gets the SPDX license IDs as JSON.',
+      'Cannot disable `json` option because get-spdx-license-ids always gets the SPDX license IDs as JSON.',
       'should fail when `json` option is disabled.'
     );
   }).catch(t.fail);
