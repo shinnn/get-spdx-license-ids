@@ -1,4 +1,4 @@
-'use strong';
+'use strict';
 
 const getSpdxLicenseIds = require('.');
 const test = require('tape');
