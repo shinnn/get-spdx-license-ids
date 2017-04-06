@@ -10,12 +10,22 @@ function hasValidSpdxLicenseId(license) {
   return !license.licenseId.endsWith('+');
 }
 
+function isNotDeprecated(license) {
+  return !license.isDeprecatedLicenseId;
+}
+
 function getLicenseId(license) {
   return license.licenseId;
 }
 
-function extractSpdxLicenseIds(response) {
-  return response.body.licenses.filter(hasValidSpdxLicenseId).map(getLicenseId);
+function extractSpdxLicenseIds(omitDeprecated) {
+  return function(response) {
+    var results = response.body.licenses.filter(hasValidSpdxLicenseId);
+    if (omitDeprecated) {
+      results = results.filter(isNotDeprecated);
+    }
+    return results.map(getLicenseId);
+  };
 }
 
 module.exports = function getSpdxLicenseIds(options) {
@@ -31,5 +41,5 @@ module.exports = function getSpdxLicenseIds(options) {
   }, options, {
     json: true
   }))
-  .then(extractSpdxLicenseIds);
+  .then(extractSpdxLicenseIds(options && options.omitDeprecated));
 };

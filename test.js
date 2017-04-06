@@ -4,7 +4,7 @@ const getSpdxLicenseIds = require('.');
 const test = require('tape');
 
 test('getSpdxLicenseIds()', t => {
-  t.plan(5);
+  t.plan(6);
 
   t.strictEqual(getSpdxLicenseIds.name, 'getSpdxLicenseIds', 'should have a function name.');
 
@@ -23,6 +23,14 @@ test('getSpdxLicenseIds()', t => {
       ids.includes('GPL-1.0+'),
       false,
       'should be fulfilled with an array that doesn\'t include any SPDX expressions.'
+    );
+  }).catch(t.fail);
+
+  getSpdxLicenseIds({omitDeprecated: true}).then(ids => {
+    t.strictEqual(
+      ids.includes('WXwindows'),
+      false,
+      'should be fulfilled with an array that doesn\'t include any deprecated identifiers.'
     );
   }).catch(t.fail);
 
