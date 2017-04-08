@@ -1,6 +1,6 @@
 {
   "name": "get-spdx-license-ids",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Get an array of the latest list of SPDX license IDs from spdx.org",
   "repository": "shinnn/get-spdx-license-ids",
   "author": "Shinnosuke Watanabe (https://github.com/shinnn)",
@@ -32,9 +32,9 @@
   },
   "devDependencies": {
     "@shinnn/eslint-config-node": "^3.0.0",
-    "eslint": "^3.1.1",
-    "istanbul": "^0.4.4",
+    "eslint": "^3.19.0",
+    "istanbul": "^0.4.5",
     "tap-spec": "^4.1.1",
-    "tape": "^4.6.0"
+    "tape": "^4.6.3"
   }
 }
