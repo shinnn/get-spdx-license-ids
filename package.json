@@ -27,7 +27,8 @@
 		"oss"
 	],
 	"dependencies": {
-		"fettuccine": "^1.0.3"
+		"fettuccine-class": "^1.0.5",
+		"inspect-with-kind": "^1.0.4"
 	},
 	"devDependencies": {
 		"@shinnn/eslint-config-node": "^5.0.0",

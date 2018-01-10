@@ -4,7 +4,7 @@ const getSpdxLicenseIds = require('.');
 const test = require('tape');
 
 test('getSpdxLicenseIds()', async t => {
-	t.plan(7);
+	t.plan(9);
 
 	process.env.HTTPS_PROXY = 'https://example.org';
 
@@ -20,7 +20,7 @@ test('getSpdxLicenseIds()', async t => {
 	delete process.env.HTTPS_PROXY;
 
 	(async () => {
-		const ids = await getSpdxLicenseIds(null);
+		const ids = await getSpdxLicenseIds();
 
 		t.equal(
 			Array.isArray(ids),
@@ -47,6 +47,26 @@ test('getSpdxLicenseIds()', async t => {
 			'should get an array without any deprecated identifiers.'
 		);
 	})();
+
+	try {
+		await getSpdxLicenseIds(null);
+	} catch ({message}) {
+		t.equal(
+			message,
+			'Expected an object to set the options of get-spdx-license-ids, but got null instead.',
+			'should fail when it takes a non-object argument.'
+		);
+	}
+
+	try {
+		await getSpdxLicenseIds(Number);
+	} catch ({message}) {
+		t.equal(
+			message,
+			'Expected an object to set the options of get-spdx-license-ids, but got [Function: Number] instead.',
+			'should fail when it takes an falsy argument.'
+		);
+	}
 
 	try {
 		await getSpdxLicenseIds({json: false});
