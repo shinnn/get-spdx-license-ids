@@ -4,10 +4,23 @@ const getSpdxLicenseIds = require('.');
 const test = require('tape');
 
 test('getSpdxLicenseIds()', async t => {
-	t.plan(6);
+	t.plan(7);
+
+	process.env.HTTPS_PROXY = 'https://example.org';
+
+	try {
+		await getSpdxLicenseIds();
+	} catch ({message}) {
+		t.ok(
+			message.includes('tunneling socket could not be established'),
+			'should support proxy environment variables.'
+		);
+	}
+
+	delete process.env.HTTPS_PROXY;
 
 	(async () => {
-		const ids = await getSpdxLicenseIds();
+		const ids = await getSpdxLicenseIds(null);
 
 		t.equal(
 			Array.isArray(ids),
