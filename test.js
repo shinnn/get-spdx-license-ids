@@ -4,7 +4,7 @@ const getSpdxLicenseIds = require('.');
 const test = require('tape');
 
 test('getSpdxLicenseIds()', async t => {
-	t.plan(5);
+	t.plan(6);
 
 	(async () => {
 		const ids = await getSpdxLicenseIds();
@@ -42,6 +42,16 @@ test('getSpdxLicenseIds()', async t => {
 			message,
 			'Cannot disable `json` option because get-spdx-license-ids always gets the SPDX license IDs as JSON.',
 			'should fail when `json` option is disabled.'
+		);
+	}
+
+	try {
+		await getSpdxLicenseIds({}, {});
+	} catch ({message}) {
+		t.equal(
+			message,
+			'Expected 0 or 1 arguments (options: <Object>), but got 2 arguments.',
+			'should fail when it takes too many arguments.'
 		);
 	}
 });
