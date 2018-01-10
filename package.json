@@ -1,40 +1,41 @@
 {
-  "name": "get-spdx-license-ids",
-  "version": "1.1.0",
-  "description": "Get an array of the latest list of SPDX license IDs from spdx.org",
-  "repository": "shinnn/get-spdx-license-ids",
-  "author": "Shinnosuke Watanabe (https://github.com/shinnn)",
-  "scripts": {
-    "pretest": "eslint --fix --config @shinnn/node index.js test.js",
-    "test": "node --throw-deprecation --track-heap-objects test.js | tap-spec",
-    "coverage": "istanbul cover test.js"
-  },
-  "license": "MIT",
-  "files": [
-    "index.js"
-  ],
-  "keywords": [
-    "request",
-    "get",
-    "latest",
-    "spdx",
-    "license",
-    "licenses",
-    "id",
-    "identifier",
-    "identifiers",
-    "json",
-    "array",
-    "oss"
-  ],
-  "dependencies": {
-    "fettuccine": "^1.0.2"
-  },
-  "devDependencies": {
-    "@shinnn/eslint-config-node": "^3.0.0",
-    "eslint": "^3.19.0",
-    "istanbul": "^0.4.5",
-    "tap-spec": "^4.1.1",
-    "tape": "^4.6.3"
-  }
+	"name": "get-spdx-license-ids",
+	"version": "1.1.0",
+	"description": "Get an array of the latest list of SPDX license IDs from spdx.org",
+	"repository": "shinnn/get-spdx-license-ids",
+	"author": "Shinnosuke Watanabe (https://github.com/shinnn)",
+	"scripts": {
+		"pretest": "eslint --fix --format=codeframe index.js test.js",
+		"test": "nyc node test.js"
+	},
+	"license": "MIT",
+	"files": [
+		"index.js"
+	],
+	"keywords": [
+		"request",
+		"get",
+		"latest",
+		"spdx",
+		"license",
+		"licenses",
+		"id",
+		"identifier",
+		"identifiers",
+		"json",
+		"array",
+		"oss"
+	],
+	"dependencies": {
+		"fettuccine": "^1.0.3"
+	},
+	"devDependencies": {
+		"@shinnn/eslint-config-node": "^5.0.0",
+		"eslint": "^4.15.0",
+		"nyc": "^11.4.1",
+		"tape": "^4.8.0"
+	},
+	"eslintConfig": {
+		"extends": "@shinnn/node"
+	}
 }

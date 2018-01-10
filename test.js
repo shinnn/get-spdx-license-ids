@@ -3,42 +3,45 @@
 const getSpdxLicenseIds = require('.');
 const test = require('tape');
 
-test('getSpdxLicenseIds()', t => {
-  t.plan(6);
+test('getSpdxLicenseIds()', async t => {
+	t.plan(5);
 
-  t.strictEqual(getSpdxLicenseIds.name, 'getSpdxLicenseIds', 'should have a function name.');
+	(async () => {
+		const ids = await getSpdxLicenseIds();
 
-  getSpdxLicenseIds().then(ids => {
-    t.strictEqual(
-      Array.isArray(ids),
-      true,
-      'should be fulfilled with an array.'
-    );
-    t.strictEqual(
-      ids.includes('GPL-1.0'),
-      true,
-      'should be fulfilled with an array of SPDX license IDs.'
-    );
-    t.strictEqual(
-      ids.includes('GPL-1.0+'),
-      false,
-      'should be fulfilled with an array that doesn\'t include any SPDX expressions.'
-    );
-  }).catch(t.fail);
+		t.equal(
+			Array.isArray(ids),
+			true,
+			'should get an array.'
+		);
 
-  getSpdxLicenseIds({omitDeprecated: true}).then(ids => {
-    t.strictEqual(
-      ids.includes('WXwindows'),
-      false,
-      'should be fulfilled with an array that doesn\'t include any deprecated identifiers.'
-    );
-  }).catch(t.fail);
+		t.ok(
+			ids.includes('GPL-1.0'),
+			'should get SPDX license IDs.'
+		);
 
-  getSpdxLicenseIds({json: false}).then(t.fail, err => {
-    t.strictEqual(
-      err.message,
-      'Cannot disable `json` option because get-spdx-license-ids always gets the SPDX license IDs as JSON.',
-      'should fail when `json` option is disabled.'
-    );
-  }).catch(t.fail);
+		t.notOk(
+			ids.includes('GPL-1.0+'),
+			'should get an array without any SPDX expressions.'
+		);
+	})();
+
+	(async () => {
+		const ids = await getSpdxLicenseIds({omitDeprecated: true});
+
+		t.notOk(
+			ids.includes('WXwindows'),
+			'should get an array without any deprecated identifiers.'
+		);
+	})();
+
+	try {
+		await getSpdxLicenseIds({json: false});
+	} catch ({message}) {
+		t.equal(
+			message,
+			'Cannot disable `json` option because get-spdx-license-ids always gets the SPDX license IDs as JSON.',
+			'should fail when `json` option is disabled.'
+		);
+	}
 });
