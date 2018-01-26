@@ -1,6 +1,6 @@
 {
 	"name": "get-spdx-license-ids",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"description": "Get an array of the latest list of SPDX license IDs from spdx.org",
 	"repository": "shinnn/get-spdx-license-ids",
 	"author": "Shinnosuke Watanabe (https://github.com/shinnn)",
