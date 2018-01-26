@@ -4,12 +4,12 @@ const getSpdxLicenseIds = require('.');
 const test = require('tape');
 
 test('getSpdxLicenseIds()', async t => {
-	t.plan(9);
+	t.plan(11);
 
 	process.env.HTTPS_PROXY = 'https://example.org';
 
 	try {
-		await getSpdxLicenseIds();
+		await getSpdxLicenseIds({});
 	} catch ({message}) {
 		t.ok(
 			message.includes('tunneling socket could not be established'),
@@ -29,7 +29,7 @@ test('getSpdxLicenseIds()', async t => {
 		);
 
 		t.ok(
-			ids.includes('GPL-1.0'),
+			ids.includes('GPL-3.0-only'),
 			'should get SPDX license IDs.'
 		);
 
@@ -37,14 +37,28 @@ test('getSpdxLicenseIds()', async t => {
 			ids.includes('GPL-1.0+'),
 			'should get an array without any SPDX expressions.'
 		);
+
+		t.notOk(
+			ids.includes('wXwindows'),
+			'should exclude deprecated IDs from the result.'
+		);
 	})();
 
 	(async () => {
-		const ids = await getSpdxLicenseIds({omitDeprecated: true});
+		const ids = await getSpdxLicenseIds.all();
 
-		t.notOk(
-			ids.includes('WXwindows'),
-			'should get an array without any deprecated identifiers.'
+		t.ok(
+			ids.includes('Interbase-1.0') && ids.includes('Nunit'),
+			'should get both deprecated and non-deprecated IDs by `all` method.'
+		);
+	})();
+
+	(async () => {
+		const ids = await getSpdxLicenseIds.deprecated();
+
+		t.ok(
+			!ids.includes('W3C') && ids.includes('GPL-1.0'),
+			'should get only deprecated IDs by `deprecated` method.'
 		);
 	})();
 

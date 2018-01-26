@@ -3,26 +3,20 @@
 const Fettucine = require('fettuccine-class');
 const inspectWithKind = require('inspect-with-kind');
 
-function hasValidSpdxLicenseId(license) {
-	return !license.licenseId.endsWith('+');
+function isValidId({licenseId}) {
+	return !licenseId.endsWith('+');
 }
 
-function isNotDeprecated(license) {
-	return !license.isDeprecatedLicenseId;
+function isDeprecatedAndValidId({isDeprecatedLicenseId, licenseId}) {
+	return isDeprecatedLicenseId && !licenseId.endsWith('+');
 }
 
-function getLicenseId(license) {
-	return license.licenseId;
+function isNonDeprecatedAndValidId({isDeprecatedLicenseId, licenseId}) {
+	return !isDeprecatedLicenseId && !licenseId.endsWith('+');
 }
 
-function extractSpdxLicenseIds(omitDeprecated) {
-	return function(response) {
-		let results = response.body.licenses.filter(hasValidSpdxLicenseId);
-		if (omitDeprecated) {
-			results = results.filter(isNotDeprecated);
-		}
-		return results.map(getLicenseId);
-	};
+function getLicenseId({licenseId}) {
+	return licenseId;
 }
 
 const fettuccine = new Fettucine({
@@ -30,7 +24,7 @@ const fettuccine = new Fettucine({
 	json: true
 });
 
-module.exports = function getSpdxLicenseIds(...args) {
+async function getSpdxLicenseData(...args) {
 	const argLen = args.length;
 
 	if (argLen !== 0 && argLen !== 1) {
@@ -42,7 +36,7 @@ module.exports = function getSpdxLicenseIds(...args) {
 	if (argLen === 1) {
 		if (options !== null && typeof options === 'object') {
 			if (options.json === false) {
-				return Promise.reject(new Error('Cannot disable `json` option because get-spdx-license-ids always gets the SPDX license IDs as JSON.'));
+				throw new Error('Cannot disable `json` option because get-spdx-license-ids always gets the SPDX license IDs as JSON.');
 			}
 		} else {
 			throw new TypeError(`Expected an object to set the options of get-spdx-license-ids, but got ${
@@ -51,6 +45,17 @@ module.exports = function getSpdxLicenseIds(...args) {
 		}
 	}
 
-	return fettuccine.get('licenses/licenses.json', ...args)
-	.then(extractSpdxLicenseIds(options && options.omitDeprecated));
+	return (await fettuccine.get('licenses/licenses.json', ...args)).body.licenses;
+}
+
+module.exports = async function getSpdxLicenseIds(...args) {
+	return (await getSpdxLicenseData(...args)).filter(isNonDeprecatedAndValidId).map(getLicenseId);
+};
+
+module.exports.all = async function getAllSpdxLicenseIds(...args) {
+	return (await getSpdxLicenseData(...args)).filter(isValidId).map(getLicenseId);
+};
+
+module.exports.deprecated = async function getDeprecatedSpdxLicenseIds(...args) {
+	return (await getSpdxLicenseData(...args)).filter(isDeprecatedAndValidId).map(getLicenseId);
 };
