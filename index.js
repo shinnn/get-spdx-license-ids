@@ -56,6 +56,26 @@ module.exports.all = async function getAllSpdxLicenseIds(...args) {
 	return (await getSpdxLicenseData(...args)).filter(isValidId).map(getLicenseId);
 };
 
+module.exports.both = async function getBothSpdxLicenseIds(...args) {
+	const deprecated = [];
+	const valid = [];
+
+	for (const {licenseId, isDeprecatedLicenseId} of await getSpdxLicenseData(...args)) {
+		if (licenseId.endsWith('+')) {
+			continue;
+		}
+
+		if (isDeprecatedLicenseId) {
+			deprecated.push(licenseId);
+			continue;
+		}
+
+		valid.push(licenseId);
+	}
+
+	return [valid, deprecated];
+};
+
 module.exports.deprecated = async function getDeprecatedSpdxLicenseIds(...args) {
 	return (await getSpdxLicenseData(...args)).filter(isDeprecatedAndValidId).map(getLicenseId);
 };

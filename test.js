@@ -4,7 +4,7 @@ const getSpdxLicenseIds = require('.');
 const test = require('tape');
 
 test('getSpdxLicenseIds()', async t => {
-	t.plan(11);
+	t.plan(12);
 
 	process.env.HTTPS_PROXY = 'https://example.org';
 
@@ -19,6 +19,13 @@ test('getSpdxLicenseIds()', async t => {
 
 	delete process.env.HTTPS_PROXY;
 
+	const [valid, deprecated] = await getSpdxLicenseIds.both();
+
+	t.ok(
+		valid.includes('W3C') && deprecated.includes('GPL-1.0'),
+		'should get two arrays of valid/deprecated IDs by `both` method.'
+	);
+
 	(async () => {
 		const ids = await getSpdxLicenseIds();
 
@@ -28,8 +35,9 @@ test('getSpdxLicenseIds()', async t => {
 			'should get an array.'
 		);
 
-		t.ok(
-			ids.includes('GPL-3.0-only'),
+		t.deepEqual(
+			ids,
+			valid,
 			'should get SPDX license IDs.'
 		);
 
@@ -54,10 +62,9 @@ test('getSpdxLicenseIds()', async t => {
 	})();
 
 	(async () => {
-		const ids = await getSpdxLicenseIds.deprecated();
-
-		t.ok(
-			!ids.includes('W3C') && ids.includes('GPL-1.0'),
+		t.deepEqual(
+			await getSpdxLicenseIds.deprecated(),
+			deprecated,
 			'should get only deprecated IDs by `deprecated` method.'
 		);
 	})();

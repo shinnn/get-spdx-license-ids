@@ -46,19 +46,6 @@ It retrieves an array of non-deprecated SPDX license identifiers from <https://s
 })
 ```
 
-### getSpdxLicenseIds.all([*options*])
-
-Retrieves both deprecated and non-deprecated IDs.
-
-```javascript
-(async () => {
-  const allIds = await getSpdxLicenseIds.all();
-  allIds.includes('MIT'); //=> true
-  allIds.includes('ISC'); //=> true
-  allIds.includes('GPL-1.0'); //=> false
-})();
-```
-
 ### getSpdxLicenseIds.deprecated([*options*])
 
 Retrieves deprecated IDs only.
@@ -70,6 +57,42 @@ Retrieves deprecated IDs only.
   deprecatedIds.includes('ISC'); //=> false
 
   deprecatedIds.includes('GPL-1.0'); //=> true
+})();
+```
+
+### getSpdxLicenseIds.all([*options*])
+
+Retrieves both deprecated and non-deprecated IDs in a single array.
+
+```javascript
+(async () => {
+  const allIds = await getSpdxLicenseIds.all();
+  allIds.includes('MIT'); //=> true
+  allIds.includes('ISC'); //=> true
+  allIds.includes('GPL-1.0'); //=> false
+})();
+```
+
+### getSpdxLicenseIds.both([*options*])
+
+Retrieves both deprecated and non-deprecated IDs in two separate arrays.
+
+```javascript
+(async () => {
+  const pair = await getSpdxLicenseIds.both();
+  pair.length; //=> 2
+
+  const [valid, deprecated] = pair;
+
+  valid.includes('MIT'); //=> true
+  valid.includes('ISC'); //=> true
+
+  valid.includes('GPL-1.0'); //=> false
+
+  deprecated.includes('MIT'); //=> false
+  deprecated.includes('ISC'); //=> false
+
+  deprecated.includes('GPL-1.0'); //=> true
 })();
 ```
 
