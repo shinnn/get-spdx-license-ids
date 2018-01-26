@@ -56,7 +56,7 @@ Retrieves both deprecated and non-deprecated IDs.
   allIds.includes('MIT'); //=> true
   allIds.includes('ISC'); //=> true
   allIds.includes('GPL-1.0'); //=> false
-})
+})();
 ```
 
 ### getSpdxLicenseIds.deprecated([*options*])
@@ -70,7 +70,7 @@ Retrieves deprecated IDs only.
   deprecatedIds.includes('ISC'); //=> false
 
   deprecatedIds.includes('GPL-1.0'); //=> true
-})
+})();
 ```
 
 ## License
